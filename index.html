@@ -76,7 +76,6 @@
             position: relative;
             /* Add dotted border for cutting guide */
             border: 2px dashed #ccc !important;
-            min-width: 350px;
         }
 
         /* Add cutting guides around each label */
@@ -177,7 +176,72 @@
             font-weight: bold;
         }
 
-   
+        /* Print Styles for A4 Paper with Cutting Guides */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .controls {
+                display: none;
+            }
+
+            .labels-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10mm; /* Increased gap for cutting space */
+                margin: 0;
+                padding: 10mm;
+            }
+
+            .product-label {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                border: 2px dashed #000 !important; /* Black dashed for print */
+                box-shadow: none;
+                margin: 0;
+                height: 180px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                /* Ensure labels are properly sized for cutting */
+                width: 85mm;
+                height: 54mm;
+                position: relative;
+            }
+
+            /* Remove hover effects for print */
+            .product-label:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            /* Remove the red guide for print */
+            .product-label::before {
+                display: none;
+            }
+
+            /* Ensure each page has proper margins */
+            @page {
+                margin: 10mm;
+                size: A4;
+            }
+
+            /* Add page breaks every 21 labels (3 columns × 7 rows) */
+            .product-label:nth-child(21n) {
+                page-break-after: always;
+            }
+
+            /* Cutting guide text for printers */
+            .cutting-guide {
+                display: block !important;
+                text-align: center;
+                font-size: 8px;
+                color: #999;
+                margin-top: 5px;
+            }
+        }
 
         /* Cutting guide text (hidden on screen, shown in print) */
         .cutting-guide {
@@ -249,7 +313,16 @@
 </head>
 <body>
     <div class="container">
-
+        <!-- Control Panel -->
+        <div class="controls">
+            <button onclick="addLabels(1)">Add 1 Label</button>
+            <button onclick="addLabels(10)">Add 10 Labels</button>
+            <button onclick="addLabels(50)">Add 50 Labels</button>
+            <button onclick="addLabels(100)">Add 100 Labels</button>
+            <input type="number" id="customCount" placeholder="Custom number" min="1" max="1000">
+            <button onclick="addCustomLabels()">Add Custom</button>
+            <button onclick="clearLabels()">Clear All</button>
+        </div>
 
         <!-- Labels Grid -->
         <div class="labels-grid" id="labelsContainer">
@@ -311,7 +384,6 @@
                         
                     </div>
                     
-                    <!-- Cutting Guide Text (only visible in print) -->
                     <div class="cutting-guide">✄ Cut along dashed line</div>
                 </div>
             `;
@@ -358,10 +430,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey) {
                 switch(e.key) {
-                    case 'p':
-                        e.preventDefault();
-                        window.print();
-                        break;
+
                     case 'a':
                         e.preventDefault();
                         addLabels(1);
