@@ -160,53 +160,7 @@
             font-weight: bold;
         }
 
-        /* Print Styles for A4 Paper */
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-                margin: 0;
-            }
 
-            .controls {
-                display: none;
-            }
-
-            .labels-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 15px;
-                margin: 0;
-                padding: 15px;
-            }
-
-            .product-label {
-                page-break-inside: avoid;
-                break-inside: avoid;
-                border: 1px solid #ccc;
-                box-shadow: none;
-                margin: 0;
-                height: 180px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .product-label:hover {
-                transform: none;
-                box-shadow: none;
-            }
-
-            /* Ensure each page has proper margins */
-            @page {
-                margin: 15mm;
-                size: A4;
-            }
-
-            /* Add page breaks every 21 labels (3 columns × 7 rows) */
-            .product-label:nth-child(21n) {
-                page-break-after: always;
-            }
-        }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -258,7 +212,6 @@
             <input type="number" id="customCount" placeholder="Custom number" min="1" max="1000">
             <button onclick="addCustomLabels()">Add Custom</button>
             <button onclick="clearLabels()">Clear All</button>
-            <button onclick="window.print()">Print Labels</button>
         </div>
 
         <!-- Labels Grid -->
@@ -365,10 +318,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey) {
                 switch(e.key) {
-                    case 'p':
-                        e.preventDefault();
-                        window.print();
-                        break;
+        
                     case 'a':
                         e.preventDefault();
                         addLabels(1);
